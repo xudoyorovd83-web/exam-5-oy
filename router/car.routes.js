@@ -9,3 +9,5 @@ const carRouter=Router()
  carRouter.put("/update_car/:id",updateCar)
  carRouter.put("/delete_car/:id",deleteCar)
 
+ module.exports=carRouter
+

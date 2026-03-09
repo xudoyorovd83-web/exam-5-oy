@@ -1,5 +1,6 @@
+const CustomErrorhandler = require("../error/custom-error-handler");
 const CarSchema = require("../schema/car.schema");
-const CustomErrorhandler = require("../error/custom-error.handler");
+
 
 
 const getAllCars = async (req, res, next) => {

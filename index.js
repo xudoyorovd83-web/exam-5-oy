@@ -3,6 +3,9 @@ const cors=require("cors")
 const connectDb = require("./config/db.config")
 require("dotenv").config()
 const cookieParser=require("cookie-parser")
+const carRouter = require("./router/car.routes")
+const authRouter = require("./router/auth.routes")
+const errorMidlleware = require("./middleware/error.midlleware")
 
 
 
@@ -12,6 +15,10 @@ connectDb()
 app.use(express.json())
 app.use(cors())
 app.use(cookieParser())
+//router
+app.use(carRouter)
+app.use(authRouter)
+app.use(errorMidlleware)
 
 
 app.listen(PORT,()=>{
