@@ -9,7 +9,6 @@ authRouter.post("/register",register)
 authRouter.post("/verify",verify)
 authRouter.post("/login",login)
 authRouter.get("/logout",authorization,logout)
-authRouter.put("/reset_passwort",authorization,)
 authRouter.put("/forgot_passwort",forgotPasswort)
 authRouter.put("/change_password",changePassword)
 

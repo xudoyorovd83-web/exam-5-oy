@@ -1,7 +1,7 @@
 
 const AuthSchema = require("../schema/auth.schema")
 const bcrypt = require("bcryptjs")
-const sendMassage = require("../utils/send-emails")
+const sendMassage = require("../utils/send-eamils")
 const { access_token, refresh_token } = require("../utils/jwt")
 const CustomErrorhandler = require("../error/custom-error-handler")
 

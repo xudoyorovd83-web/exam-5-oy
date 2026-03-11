@@ -13,7 +13,7 @@ async function sendMassage(code, email) {
             }
         })
         await transporter.sendMail({
-            subject:"lesson",
+            subject:"exam",
             from:"xudoyorovd83@gmail.com",
             to:email,
             html: `

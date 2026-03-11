@@ -6,6 +6,7 @@ const cookieParser=require("cookie-parser")
 const carRouter = require("./router/car.routes")
 const authRouter = require("./router/auth.routes")
 const errorMidlleware = require("./middleware/error.midlleware")
+const categoryRouter = require("./router/category.routes")
 
 
 
@@ -19,6 +20,7 @@ app.use(cookieParser())
 app.use(carRouter)
 app.use(authRouter)
 app.use(errorMidlleware)
+app.use(categoryRouter)
 
 
 app.listen(PORT,()=>{
