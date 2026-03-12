@@ -1,110 +1,68 @@
-const CustomErrorhandler = require("../error/custom-error-handler");
-const CarSchema = require("../schema/car.schema");
-
-
+const CustomErrorhandler = require("../error/custom-error-handler")
+const CarSchema = require("../schema/car.schema")
 
 const getAllCars = async (req, res, next) => {
-try {
-
-    const cars = await CarSchema.find();
-
-    res.status(200).json({
-        count: cars.length,
-        data: cars
-    });
-
-} catch (error) {
-    next(error);
+    try {
+        const cars = await CarSchema.find().populate("category")
+        res.status(200).json({ count: cars.length, data: cars })
+    } catch (error) {
+        next(error)
+    }
 }
-
-
-};
-
 
 const getOneCar = async (req, res, next) => {
-try {
-
-
-    const car = await CarSchema.findById(req.params.id);
-
-    if (!car) {
-        throw CustomErrorhandler.BadRequest("Car not found");
+    try {
+        const car = await CarSchema.findById(req.params.id).populate("category")
+        if (!car) throw CustomErrorhandler.BadRequest("Car not found")
+        res.status(200).json({ data: car })
+    } catch (error) {
+        next(error)
     }
-
-    res.status(200).json({
-        data: car
-    });
-
-} catch (error) {
-    next(error);
 }
 
-
-};
 const addCar = async (req, res, next) => {
     try {
-        const {model,tanirovka,motor,year,color,price,dictance,GearBook,Desecription,imageUrl } = req.body
-        await AuthorSchema.create({ model,tanirovka,motor,year,color,price,dictance,GearBook,Desecription,imageUrl  })
+        if (req.user.role !== "admin") throw CustomErrorhandler.Forbidden("You are not admin")
 
-        res.status(201).json({
-            massage: "added nev car"
-        })
+        const car = await CarSchema.create(req.body)
+        res.status(201).json({ message: "New car added", data: car })
     } catch (error) {
         next(error)
     }
 }
 
 const updateCar = async (req, res, next) => {
-try {
+    try {
+        if (req.user.role !== "admin") throw CustomErrorhandler.Forbidden("You are not admin")
 
+        const car = await CarSchema.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        })
 
-    const car = await CarSchema.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true, runValidators: true }
-    );
-
-    if (!car) {
-        throw CustomErrorhandler.BadRequest("Car not found");
+        if (!car) throw CustomErrorhandler.BadRequest("Car not found")
+        res.status(200).json({ message: "Car updated", data: car })
+    } catch (error) {
+        next(error)
     }
-
-    res.status(200).json({
-        message: "Car updated",
-        data: car
-    });
-
-} catch (error) {
-    next(error);
 }
-
-
-};
 
 const deleteCar = async (req, res, next) => {
-try {
+    try {
+        if (req.user.role !== "admin") throw CustomErrorhandler.Forbidden("You are not admin")
 
-
-    const car = await CarSchema.findByIdAndDelete(req.params.id);
-
-    if (!car) {
-        throw CustomErrorhandler.BadRequest("Car not found");
+        const car = await CarSchema.findByIdAndDelete(req.params.id)
+        if (!car) throw CustomErrorhandler.BadRequest("Car not found")
+        res.status(200).json({ message: "Car deleted" })
+    } catch (error) {
+        next(error)
     }
-
-    res.status(200).json({
-        message: "Car deleted"
-    });
-
-} catch (error) {
-    next(error);
 }
 
-
-};
-
 module.exports = {
-getAllCars,
-getOneCar,
-addCar,
-updateCar,
-deleteCar
-};
+    getAllCars,
+    getOneCar,
+    addCar,
+    updateCar,
+    deleteCar
+}

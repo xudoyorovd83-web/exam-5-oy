@@ -6,7 +6,7 @@ const Auth = new Schema({
         required: [true, "Username berilishi shart"],
         minlength: [3, "kamida 3 harfdan iborat bo'lishi kerak"],
         maxlength: [40, "ko'pi bilan 40 ta  harfdan iborat bo'lishi kerak"],
-        set: (valeu) => valeu.trim()
+        trim:true,
        
 
     },
@@ -32,40 +32,35 @@ const Auth = new Schema({
     },
 
     email: {
-        type: String,
-        required: [true, "email berilishi shart "],
-        min: [3, "kamida 3 ta so'zdan iborat bo'lsin"],
-        max: [7, "ko'pi bilan 7 ta so'z bo'lsin"]
+        type:String,
+    required:[true,"email berilishi shart"],
+    trim:true,
+    unique:true,
+    lowercase:true,
+    match:[/^\S+@\S+\.\S+$/,"email noto'g'ri"]
+        
     },
     password: {
         type: String,
         required: [true, "password berilishi shart "],
-        min: [3, "kamida 3 ta sondan iborat bo'lsin"],
-        max: [7, "ko'pi bilan 7 ta son bo'lsin"]
+        minlength: [3, "kamida 3 ta sondan iborat bo'lsin"],
+        maxlength: [7, "ko'pi bilan 7 ta son bo'lsin"],
+        
     },
     role: {
         type: String,
-        default:"user" [true, "role berilishi shart"],
-        minlength: [10, "kamida 10 ta so'zdan iborat bo'lsin"],
-        maxlength: [100, "ko'pi bilan 100 ta so'zdan iborat bo'lsin"],
-        trim: true,
+        default:"user",
+        enum:['user','admin']
        
 
     },
     otp: {
         type: String,
-        required: [true, "otp berilishi shart"],
-        minlength: [10, "kamida 10 ta so'zdan iborat bo'lsin"],
-        maxlength: [100, "ko'pi bilan 100 ta so'zdan iborat bo'lsin"],
-        trim: true,
        
     },
     otpTime: {
         type: Number,
-        required: [true, "otpTime berilishi shart"],
-        minlength: [10, "kamida 10 ta so'zdan iborat bo'lsin"],
-        maxlength: [100, "ko'pi bilan 100 ta so'zdan iborat bo'lsin"],
-        trim: true,
+       
     },
     refreshToken:{
         type:String
@@ -76,8 +71,6 @@ const Auth = new Schema({
     versionKey: false,
     timestamps: true
 })
-Auth.statics.findByFullName = function (valeu) {
-    return this.find({ fullName: valeu })
-}
+
 const AuthSchema = model("auth", Auth)
 module.exports = AuthSchema

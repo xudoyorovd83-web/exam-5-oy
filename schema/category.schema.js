@@ -11,10 +11,12 @@ const categorySchema = new Schema({
     },
     imageUrl:{
         type:String,
-        required:[true,"imgUrl kiritilishi shart"]
+        required:[true,"imgUrl kiritilishi shart"],
+         match:[/^https?:\/\/.+/,"Rasm URL noto'g'ri"]
     },
 },{
-    timestamps:true
+    timestamps:true,
+    versionKey:false
 })
 
 module.exports = model("Category",categorySchema)

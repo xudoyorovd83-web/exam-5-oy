@@ -8,8 +8,8 @@ const authRouter=Router()
 authRouter.post("/register",register)
 authRouter.post("/verify",verify)
 authRouter.post("/login",login)
-authRouter.get("/logout",authorization,logout)
-authRouter.put("/forgot_passwort",forgotPasswort)
-authRouter.put("/change_password",changePassword)
+authRouter.post("/logout",authorization,logout)
+authRouter.post("/forgot_password",forgotPasswort)
+authRouter.put("/change_password",authorization,changePassword)
 
 module.exports=authRouter

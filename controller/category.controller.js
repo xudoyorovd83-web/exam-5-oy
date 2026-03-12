@@ -1,8 +1,7 @@
 const CustomErrorhandler = require("../error/custom-error-handler")
 const categorySchema = require("../schema/category.schema")
 
-
-const getAllCategories = async(req,res,next)=>{
+const getAllCategories = async (req, res, next) => {
     try {
 
         const categories = await categorySchema.find()
@@ -13,14 +12,15 @@ const getAllCategories = async(req,res,next)=>{
         next(error)
     }
 }
-const getOneCategory = async (req,res,next)=>{
+
+const getOneCategory = async (req, res, next) => {
     try {
 
-        const {id} = req.params
+        const { id } = req.params
 
         const category = await categorySchema.findById(id)
 
-        if(!category){
+        if (!category) {
             throw CustomErrorhandler.BadRequest("category not found")
         }
 
@@ -31,50 +31,62 @@ const getOneCategory = async (req,res,next)=>{
     }
 }
 
-
 const addCategory = async (req, res, next) => {
     try {
-        const {name,imageUrl } = req.body
-        await categorySchema.create({ name, imageUrl })
+
+        const { role } = req.user
+
+        if (role !== "admin") {
+            throw CustomErrorhandler.Forbidden("you are not admin")
+        }
+
+        const { name, imageUrl } = req.body
+
+        const category = await categorySchema.create({ name, imageUrl })
 
         res.status(201).json({
-            massage: "added new category"
+            message: "added new category",
+            data: category
         })
+
     } catch (error) {
         next(error)
     }
 }
 
-
-
-const updateCategory = async(req,res,next)=>{
+const updateCategory = async (req, res, next) => {
     try {
+        const { role } = req.user
+        if (role !== "admin") throw CustomErrorhandler.Forbidden("you are not admin")
 
-        const {id} = req.params
-        const {name} = req.body
+        const { id } = req.params
+        const { name, imageUrl } = req.body
 
         const category = await categorySchema.findByIdAndUpdate(
             id,
-            {name},
-            {new:true}
+            { name, imageUrl },
+            { new: true }
         )
 
-        res.status(200).json(category)
+        if (!category) throw CustomErrorhandler.BadRequest("category not found")
 
+        res.status(200).json({ message: "category updated", data: category })
     } catch (error) {
         next(error)
     }
 }
 
-const deleteCategory = async(req,res,next)=>{
+const deleteCategory = async (req, res, next) => {
     try {
+        const { role } = req.user
+        if (role !== "admin") throw CustomErrorhandler.Forbidden("you are not admin")
 
-        const {id} = req.params
+        const { id } = req.params
+        const category = await categorySchema.findByIdAndDelete(id)
 
-        await categorySchema.findByIdAndDelete(id)
+        if (!category) throw CustomErrorhandler.BadRequest("category not found")
 
-        res.status(200).json({message:"deleted"})
-
+        res.status(200).json({ message: "category deleted" })
     } catch (error) {
         next(error)
     }

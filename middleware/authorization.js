@@ -12,9 +12,9 @@ module.exports=function(req,res,next){
         const token=authorization.split(" ")[1]
 
         if(bearer !=="Bearer" || !token){
-            throw CustomErrorhandler.UnAuthorizet("token is not required")
+            throw CustomErrorhandler.UnAuthorizet("token is required")
         }
-        const decode=jwt.verify(token,proccess.env.SECRET_KEY)
+        const decode=jwt.verify(token, process.env.SECRET_KEY)
         req["user"]=decode
 
         next()
